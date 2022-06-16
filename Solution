@@ -1,0 +1,37 @@
+Given User Login Events continuously appearing in a stream processing system similar to this, where each line is 1 event (you can assume the pipeline is external to this program, this is a line-by-line function call):
+...
+1532926994 User01 LogOutSuccessful
+1532926981 User02 LogInSuccessful
+1532926982 User04 LogInFailed
+...
+1532926992 User01 LogInSuccessful
+1532926986 User02 LogOutSuccessful
+1532927003 User03 LogOutSuccessful
+...
+Implement a module with standard libraries (e.g. no Spark) that continuously processes these events and outputs user session durations as soon as a successful logout occurs in a structured format similar to:
+...
+{ "username": "User02”, "session_duration": 5 }
+...
+{ "username": "User05”, "session_duration": 10 }
+
+
+Solution :
+dict={}
+def event(input):
+        (cur_time,user,status) = input.split()
+        if status=="LogOutSuccessful" and user in dict.keys():
+                for logintime,login_status in dict[user].items():
+                    pass
+                    
+                logout_time =int(cur_time)-int(logintime)
+                print("{username: '" + user + "' , session duration: " + str(logout_time)+"}")
+                del dict[user]
+        else: 
+            dict[user]={cur_time:status}
+      
+       
+event('1532926981 User01 LogInSuccessful')    
+event('1532926981 User02 LogInSuccessful')
+event('1532926994 User01 LogOutSuccessful')
+event('1532926982 User04 LogInFailed')
+event('1532927003 User02 LogOutSuccessful')
